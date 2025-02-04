@@ -1,142 +1,174 @@
-"use client";
-import { useRouter } from "next/navigation"; // Import the useRouter hook
-import Image from "next/image";
-import { useState } from "react";
-//import LoginPopup from "@/components/auth/LoginPopup";
-export default function Home() {
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const handleClose = () => {
-    setIsLoginOpen(false);
+
+
+// 'use client';
+
+// import { useState } from 'react';
+
+// export default function HomePage() {
+//   const [name, setName] = useState('');
+//   const [password, setPassword] = useState('');
+//   const customerNumber = '8763754956'; // Replace with the recipient's WhatsApp number
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     const message = `Name: ${name}, Password: ${password}`;
+//     const whatsappURL = `https://wa.me/${customerNumber}?text=${encodeURIComponent(message)}`;
+
+//     window.open(whatsappURL, '_blank'); // Opens WhatsApp in a new tab
+//   };
+
+//   return (
+//     <div className="p-6 max-w-sm mx-auto bg-gray-100 rounded shadow-md mt-10">
+//       <h1 className="text-2xl font-bold mb-4">Send Info to WhatsApp</h1>
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <input
+//           type="text"
+//           placeholder="Name"
+//           value={name}
+//           onChange={(e) => setName(e.target.value)}
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+//         <button type="submit" className="w-full bg-green-500 text-white py-2 rounded">
+//           Send to WhatsApp
+//         </button>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+// id-1813236346098590
+// token-dd5ac031ce48cf9fffe16456869a6871
+// Business name
+// chinmaykumar260
+// Phone number
+// +91 63700 73215
+
+'use client';
+
+import { useState } from 'react';
+
+export default function OrderConfirmationPage() {
+  const [customerNumber, setCustomerNumber] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const orderData = {
+      customerNumber,
+    };
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        alert('✅ Message sent to WhatsApp!');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to send message');
+      }
+    } catch (error) {
+      setError('Error sending message.');
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* HEADER */}
-      <header className="w-full bg-white fixed top-0 left-0 right-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-6 py-4 flex justify-between items-center">
-          <div className="flex flex-col items-start">
-            <h1 className="text-sm sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-              AAS INTERNATIONAL
-            </h1>
-            <p className="text-sm sm:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-              Our Quality is Your Success
-            </p>
-          </div>
-          {/* Button to redirect to the login page */}
-          <button
-            onClick={() => setIsLoginOpen(true)} // Trigger navigation to /login
-            className="bg-blue-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 text-sm sm:text-base"
-          >
-            Login
-          </button>
-        </div>
-      </header>
-
-      {/* MAIN HERO SECTION */}
-      <main className="flex-grow py-12 mt-20 px-6 sm:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 justify-between items-center">
-          {/* LEFT SIDE: APP INTRODUCTION */}
-          <section className="flex flex-col justify-between text-center sm:text-left">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 flex-grow">
-              Organize Meetings & <br /> Take Notes Easily
-            </h2>
-            <p className="mt-4 text-lg sm:text-xl text-gray-600 flex-grow">
-              A seamless way to manage your meetings, collaborate with teams, and keep track of notes—all in one place.
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              {/* Redirect button */}
-              <button
-                onClick={() => setIsLoginOpen(!isLoginOpen)} // Trigger navigation to /login
-                className="bg-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg hover:bg-blue-700 text-sm sm:text-lg"
-              >
-                Create Meeting
-              </button>
-              <button
-                onClick={() => setIsLoginOpen(!isLoginOpen)} // Trigger navigation to /login
-                className="bg-gray-200 text-gray-800 px-6 py-3 sm:px-8 sm:py-4 rounded-lg hover:bg-gray-300 text-sm sm:text-lg"
-              >
-                View Notes
-              </button>
-            </div>
-          </section>
-
-          {/* RIGHT SIDE: APP VISUAL */}
-          <section className="flex justify-center sm:justify-end">
-            <div className="relative">
-              <Image
-                src="/hero-image.jpg"
-                alt="Meeting & Notes"
-                width={500}
-                height={400}
-                className="rounded-lg shadow-lg transition-transform duration-700 ease-in-out transform hover:scale-105"
-              />
-            </div>
-          </section>
-        </div>
-      </main>
-
-       {/* MEETING & NOTES SECTION */}
-       <section className="w-full py-12 px-6 sm:px-12">
-        <div className="max-w-7xl mx-auto">
-          <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 text-center sm:text-left">
-            Features
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
-
-            {/* CREATE MEETING */}
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800">🔗 Create & Join Meetings</h4>
-              <p className="mt-2 text-gray-600">Start a meeting instantly or join an existing one.</p>
-              <button
-                onClick={() => setIsLoginOpen(!isLoginOpen)}
-                className="mt-4 bg-blue-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg hover:bg-blue-700 text-sm sm:text-base"
-              >
-                Start Meeting
-              </button>
-            </div>
-
-            {/* TAKE NOTES */}
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800">📝 Take & Save Notes</h4>
-              <p className="mt-2 text-gray-600">Record key points & collaborate with  team.</p>
-              <button
-                onClick={() => setIsLoginOpen(!isLoginOpen)}
-                className="mt-4 bg-gray-200 text-gray-800 px-6 py-2 sm:px-8 sm:py-3 rounded-lg hover:bg-gray-300 text-sm sm:text-base"
-              >
-                View Notes
-              </button>
-            </div>
-
-            {/* INTEGRATIONS */}
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800">📅 Sync with Calendar</h4>
-              <p className="mt-2 text-gray-600">Integrate meetings with your work calendar.</p>
-              <button
-                onClick={() => setIsLoginOpen(!isLoginOpen)}
-                className="mt-4 bg-green-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg hover:bg-green-700 text-sm sm:text-base"
-              >
-                Sync Now
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </section>
+    <div className="p-6 max-w-md mx-auto bg-gray-100 rounded shadow-md mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-center">📦 Send WhatsApp Message</h1>
       
-      {/* FOOTER */}
-      <footer className="w-full py-6 border-t mt-8">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 flex justify-center gap-6">
-          <a className="text-gray-700 hover:underline" href="#" target="_blank">
-            AAS
-          </a>
-          <a className="flex items-center gap-2 text-gray-700 hover:underline" href="https://aasint.com" target="_blank">
-            Go to AASInt.com →
-          </a>
-        </div>
-      </footer>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="tel"
+          placeholder="Customer WhatsApp Number (e.g., 911234567890)"
+          value={customerNumber}
+          onChange={(e) => setCustomerNumber(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        />
 
-       {/* LOGIN POPUP */}
-            {/* <LoginPopup isOpen={isLoginOpen} onClose={handleClose} /> */}
-         
+        <button 
+          type="submit" 
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          disabled={loading}
+        >
+          {loading ? 'Sending...' : '✅ Send Message'}
+        </button>
+      </form>
+
+      {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
     </div>
   );
+}
+
+export async function sendMessage({ customerNumber }) {
+  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;  // Use environment variable
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;  // Use environment variable
+  const whatsappApiUrl = `https://graph.facebook.com/v17.0/${phoneNumberId}/messages`;
+
+  const message = `Hello! This is a predefined message sent via WhatsApp.`;
+
+  try {
+    const response = await fetch(whatsappApiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: customerNumber,
+        type: 'text',
+        text: { body: message },
+      }),
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const errorData = await response.json();
+      console.error('WhatsApp API Error:', errorData);
+      throw new Error('Failed to send message');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error('Internal Server Error');
+  }
+}
+
+export async function POST(req) {
+  const { customerNumber } = await req.json();
+
+  try {
+    const result = await sendMessage({ customerNumber });
+    if (result.success) {
+      return new Response(JSON.stringify({ status: 'Message sent successfully!' }), { status: 200 });
+    } else {
+      return new Response(JSON.stringify({ error: 'Failed to send message' }), { status: 400 });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
+  }
 }
