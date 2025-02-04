@@ -2,7 +2,7 @@ import React from 'react'
 
 const NotesSlice = () => {
   return (
-    <div>NotesSlice</div>
+    <div>NotesSlicedsfdsr</div>
   )
 }
 
